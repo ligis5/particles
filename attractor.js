@@ -1,4 +1,7 @@
 function Attractor() {
+  const main = document.querySelector(".main");
+  const centerW = main.clientWidth / 2;
+  const centerH = main.clientHeight / 2;
   let rV = Math.random();
   let mass = Math.ceil(rV * 50);
   this.mass = mass < 5 ? 5 : mass;
@@ -13,11 +16,7 @@ function Attractor() {
   let x = centerW;
   let y = centerH;
 
-  this.currentLocation = { x, y };
-  this.cordinates = {
-    x: this.currentLocation.x - centerW,
-    y: centerH - this.currentLocation.y,
-  };
+  this.currentPosition = { x, y };
 
   let place = function () {
     particle.style.top = `${y}px`;
@@ -25,3 +24,4 @@ function Attractor() {
   };
   place();
 }
+export default Attractor;

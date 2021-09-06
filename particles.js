@@ -16,78 +16,84 @@ function Particle(id) {
   main.appendChild(particle);
   let x = Math.floor(Math.random() * main.clientWidth);
   let y = Math.floor(Math.random() * main.clientHeight);
+  particle.style.left = `${x}px`;
+  particle.style.top = `${y}px`;
 
-  this.velocity = 1;
-
-  this.cordinates = {
-    x: x - centerW,
-    y: centerH - y,
+  this.currentPosition = {
+    x,
+    y,
   };
-  let cordinates = this.cordinates;
-  let place = function () {
-    particle.style.top = `${cordinates.y + centerH}px`;
-    particle.style.left = `${cordinates.x + centerW}px`;
+  let multiplier = 5;
+  this.velocity = {
+    x: Math.random() * multiplier,
+    y: Math.random() * multiplier,
   };
-  console.log(this.cordinates);
-  setInterval(() => {
-    place();
-  }, 10);
 
-  this.moveLeft = () => {
-    let time = setTimeout(() => {
-      this.cordinates.x += this.velocity;
+  this.force;
+  // console.log(Gravity);
+  this.move = function () {
+    setInterval(() => {
+      particle.style.left = `${this.currentPosition.x}px`;
+      particle.style.top = `${this.currentPosition.y}px`;
+    }, 1000 / 60);
+    this.moveLeft = () => {
+      let time = setTimeout(() => {
+        this.currentPosition.x -= this.velocity.x;
+        this.moveLeft();
+      }, 1000 / 60);
+      if (this.currentPosition.x <= 0) {
+        clearTimeout(time);
+        this.moveRight();
+      }
+    };
+    this.moveRight = () => {
+      let time = setTimeout(() => {
+        this.currentPosition.x += this.velocity.x;
+        this.moveRight();
+      }, 1000 / 60);
+      if (this.currentPosition.x >= main.clientWidth) {
+        clearTimeout(time);
+        this.moveLeft();
+      }
+    };
+    this.moveBottom = () => {
+      let time = setTimeout(() => {
+        this.currentPosition.y += this.velocity.x;
+        this.moveBottom();
+      }, 1000 / 60);
+      if (this.currentPosition.y >= main.clientHeight) {
+        clearTimeout(time);
+        this.moveTop();
+      }
+    };
+    this.moveTop = () => {
+      let time = setTimeout(() => {
+        this.currentPosition.y -= this.velocity.x;
+        this.moveTop();
+      }, 1000 / 60);
+      if (this.currentPosition.y <= 0) {
+        clearTimeout(time);
+        this.moveBottom();
+      }
+    };
+
+    if (rV <= 0.25) {
       this.moveLeft();
-    }, 10);
-    if (this.cordinates.x >= centerW) {
-      clearTimeout(time);
-      this.moveRight();
-    }
-  };
-  this.moveRight = () => {
-    let time = setTimeout(() => {
-      this.cordinates.x -= this.velocity;
-      this.moveRight();
-    }, 10);
-    if (this.cordinates.x <= 0 - centerW) {
-      clearTimeout(time);
-      this.moveLeft();
-    }
-  };
-  this.moveTop = () => {
-    let time = setTimeout(() => {
-      this.cordinates.y += this.velocity;
-      this.moveTop();
-    }, 10);
-    if (this.cordinates.y >= centerH) {
-      clearTimeout(time);
       this.moveBottom();
     }
-  };
-  this.moveBottom = () => {
-    let time = setTimeout(() => {
-      this.cordinates.y -= this.velocity;
-      this.moveBottom();
-    }, 10);
-    if (this.cordinates.y <= 0 - centerH) {
-      clearTimeout(time);
+    if (rV <= 0.5 && rV > 0.25) {
+      this.moveRight();
       this.moveTop();
     }
+    if (rV <= 0.75 && rV > 0.5) {
+      this.moveBottom();
+      this.moveRight();
+    }
+    if (rV <= 1 && rV > 0.75) {
+      this.moveTop();
+      this.moveLeft();
+    }
   };
-
-  // if (rV <= 0.25) {
-  //   this.moveLeft();
-  //   this.moveBottom();
-  // }
-  // if (rV <= 0.5 && rV > 0.25) {
-  //   this.moveRight();
-  //   this.moveTop();
-  // }
-  // if (rV <= 0.75 && rV > 0.5) {
-  //   this.moveBottom();
-  //   this.moveRight();
-  // }
-  // if (rV <= 1 && rV > 0.75) {
-  //   this.moveTop();
-  //   this.moveLeft();
-  // }
+  this.move();
 }
+export default Particle;
