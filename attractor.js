@@ -1,3 +1,5 @@
+import Vector from "./vector.js";
+
 function Attractor() {
   const main = document.querySelector(".main");
   const centerW = main.clientWidth / 2;
@@ -16,7 +18,7 @@ function Attractor() {
   let x = centerW;
   let y = centerH;
 
-  this.currentPosition = { x, y };
+  this.currentPosition = new Vector(x, y);
 
   let place = function () {
     particle.style.top = `${y}px`;

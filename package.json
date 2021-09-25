@@ -1,0 +1,23 @@
+{
+  "name": "particles",
+  "version": "1.0.0",
+  "description": "",
+  "main": "particles.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ligis5/particles.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ligis5/particles/issues"
+  },
+  "homepage": "https://github.com/ligis5/particles#readme",
+  "dependencies": {
+    "dat.gui": "^0.7.7"
+  }
+}

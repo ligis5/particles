@@ -1,35 +1,44 @@
+import Vector from "./vector.js";
+import gui from "./gui.js";
+
 function Gravity(particles) {
   const { attract, ...remainingP } = particles;
-  // console.log(remainingP);
 
+  let dataObj = {
+    G: 0.5,
+    min: 200,
+    max: 2000,
+  };
+  gui.add(dataObj, "G").min(0).max(5).step(0.001);
+  gui.add(dataObj, "min").min(0).max(1000).step(10);
+  gui.add(dataObj, "max").min(1000).max(10000).step(10);
   this.force = function () {
     Object.entries(remainingP).forEach((p) => {
-      let vectorParticle = {
-        x: p[1].currentPosition.x,
-        y: p[1].currentPosition.y,
-      };
+      let vectorParticle = new Vector(
+        p[1].currentPosition.x,
+        p[1].currentPosition.y
+      );
 
-      let vectorAttractor = {
-        x: attract.currentPosition.x,
-        y: attract.currentPosition.y,
-      };
+      let vectorAttractor = new Vector(
+        attract.currentPosition.x,
+        attract.currentPosition.y
+      );
 
-      let v = {
-        x: vectorParticle.x - vectorAttractor.x,
-        y: vectorParticle.y - vectorAttractor.y,
-      };
+      let v = new Vector(
+        vectorParticle.x - vectorAttractor.x,
+        vectorParticle.y - vectorAttractor.y
+      );
 
       let distanceSq = Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
-      let dSqMax = distanceSq > 2500 ? 2500 : distanceSq;
-      let dSqMin = dSqMax < 50 ? 50 : distanceSq;
+      let dSqMax = distanceSq > dataObj.max ? dataObj.max : distanceSq;
+      let dSqMin = dSqMax < dataObj.min ? dataObj.min : distanceSq;
 
-      let G = 0.1;
-      let F = G * ((p[1].mass * attract.mass) / dSqMin);
+      let F = dataObj.G * ((p[1].mass * attract.mass) / dSqMin);
 
-      let normalized = { x: v.x / dSqMin, y: v.y / dSqMin };
+      let normalized = new Vector(v.x / dSqMin, v.y / dSqMin);
 
-      p[1].currentPosition.x -= normalized.x * F;
-      p[1].currentPosition.y -= normalized.y * F;
+      p[1].acc.x -= normalized.x * F;
+      p[1].acc.y -= normalized.y * F;
     });
   };
 

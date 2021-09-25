@@ -1,11 +1,15 @@
 const main = document.querySelector(".main");
 const centerW = main.clientWidth / 2;
 const centerH = main.clientHeight / 2;
+import Vector from "./vector.js";
+import gui from "./gui.js";
 
 function Particle(id) {
-  let rV = Math.random();
-  let mass = Math.ceil(rV * 50);
-  this.mass = mass < 5 ? 5 : mass;
+  let dataObj = {
+    mass: Math.ceil(Math.random() * 50),
+  };
+  gui.add(dataObj, "mass").min(1).max(50).step(0.1);
+  this.mass = dataObj.mass < 5 ? 5 : dataObj.mass;
   let particle = document.createElement("img");
   particle.setAttribute("alt", "dot");
   particle.setAttribute("id", id);
@@ -19,80 +23,35 @@ function Particle(id) {
   particle.style.left = `${x}px`;
   particle.style.top = `${y}px`;
 
-  this.currentPosition = {
-    x,
-    y,
-  };
-  let multiplier = 5;
-  this.velocity = {
-    x: Math.random() * multiplier,
-    y: Math.random() * multiplier,
-  };
+  this.currentPosition = new Vector(x, y);
 
-  this.force;
+  this.velocity = new Vector(2, 2);
+
+  this.acc = new Vector(0, 0);
   // console.log(Gravity);
   this.move = function () {
     setInterval(() => {
+      this.velocity.x += this.acc.x;
+      this.velocity.y += this.acc.y;
+      this.currentPosition.x += this.velocity.x;
+      this.currentPosition.y += this.velocity.y;
       particle.style.left = `${this.currentPosition.x}px`;
       particle.style.top = `${this.currentPosition.y}px`;
+      this.acc.x = 0;
+      this.acc.y = 0;
+      if (
+        this.currentPosition.x <= 0 ||
+        this.currentPosition.x >= main.clientWidth
+      ) {
+        this.velocity.x = this.velocity.x * -1;
+      }
+      if (
+        this.currentPosition.y <= 0 ||
+        this.currentPosition.y >= main.clientHeight
+      ) {
+        this.velocity.y = this.velocity.y * -1;
+      }
     }, 1000 / 60);
-    this.moveLeft = () => {
-      let time = setTimeout(() => {
-        this.currentPosition.x -= this.velocity.x;
-        this.moveLeft();
-      }, 1000 / 60);
-      if (this.currentPosition.x <= 0) {
-        clearTimeout(time);
-        this.moveRight();
-      }
-    };
-    this.moveRight = () => {
-      let time = setTimeout(() => {
-        this.currentPosition.x += this.velocity.x;
-        this.moveRight();
-      }, 1000 / 60);
-      if (this.currentPosition.x >= main.clientWidth) {
-        clearTimeout(time);
-        this.moveLeft();
-      }
-    };
-    this.moveBottom = () => {
-      let time = setTimeout(() => {
-        this.currentPosition.y += this.velocity.x;
-        this.moveBottom();
-      }, 1000 / 60);
-      if (this.currentPosition.y >= main.clientHeight) {
-        clearTimeout(time);
-        this.moveTop();
-      }
-    };
-    this.moveTop = () => {
-      let time = setTimeout(() => {
-        this.currentPosition.y -= this.velocity.x;
-        this.moveTop();
-      }, 1000 / 60);
-      if (this.currentPosition.y <= 0) {
-        clearTimeout(time);
-        this.moveBottom();
-      }
-    };
-
-    if (rV <= 0.25) {
-      this.moveLeft();
-      this.moveBottom();
-    }
-    if (rV <= 0.5 && rV > 0.25) {
-      this.moveRight();
-      this.moveTop();
-    }
-    if (rV <= 0.75 && rV > 0.5) {
-      this.moveBottom();
-      this.moveRight();
-    }
-    if (rV <= 1 && rV > 0.75) {
-      this.moveTop();
-      this.moveLeft();
-    }
   };
   this.move();
 }
