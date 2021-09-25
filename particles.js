@@ -8,14 +8,22 @@ function Particle(id) {
   let dataObj = {
     mass: Math.ceil(Math.random() * 50),
   };
-  gui.add(dataObj, "mass").min(1).max(50).step(0.1);
+
   this.mass = dataObj.mass < 5 ? 5 : dataObj.mass;
+  this.name = id;
+  gui
+    .add(dataObj, "mass")
+    .min(1)
+    .max(50)
+    .step(0.1)
+    .name(this.name + id);
   let particle = document.createElement("img");
   particle.setAttribute("alt", "dot");
   particle.setAttribute("id", id);
   particle.setAttribute("class", "particle");
   particle.setAttribute("width", `${this.mass}px`);
   particle.setAttribute("height", `${this.mass}px`);
+  particle.style.background = id;
   particle.src = "./particle.png";
   main.appendChild(particle);
   let x = Math.floor(Math.random() * main.clientWidth);
@@ -31,6 +39,11 @@ function Particle(id) {
   // console.log(Gravity);
   this.move = function () {
     setInterval(() => {
+      // updating mass/size
+      this.mass = dataObj.mass;
+      particle.setAttribute("width", `${this.mass}px`);
+      particle.setAttribute("height", `${this.mass}px`);
+
       this.velocity.x += this.acc.x;
       this.velocity.y += this.acc.y;
       this.currentPosition.x += this.velocity.x;
@@ -39,18 +52,18 @@ function Particle(id) {
       particle.style.top = `${this.currentPosition.y}px`;
       this.acc.x = 0;
       this.acc.y = 0;
-      if (
-        this.currentPosition.x <= 0 ||
-        this.currentPosition.x >= main.clientWidth
-      ) {
-        this.velocity.x = this.velocity.x * -1;
-      }
-      if (
-        this.currentPosition.y <= 0 ||
-        this.currentPosition.y >= main.clientHeight
-      ) {
-        this.velocity.y = this.velocity.y * -1;
-      }
+      // if (
+      //   this.currentPosition.x <= 0 ||
+      //   this.currentPosition.x >= main.clientWidth
+      // ) {
+      //   this.velocity.x = this.velocity.x * -1;
+      // }
+      // if (
+      //   this.currentPosition.y <= 0 ||
+      //   this.currentPosition.y >= main.clientHeight
+      // ) {
+      //   this.velocity.y = this.velocity.y * -1;
+      // }
     }, 1000 / 60);
   };
   this.move();

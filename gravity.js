@@ -2,16 +2,36 @@ import Vector from "./vector.js";
 import gui from "./gui.js";
 
 function Gravity(particles) {
-  const { attract, ...remainingP } = particles;
+  const { att, ...remainingP } = particles;
+  const attract = att;
 
+  // creating object for controls
   let dataObj = {
-    G: 0.5,
+    G: 0.1,
     min: 200,
-    max: 2000,
+    max: 800,
   };
-  gui.add(dataObj, "G").min(0).max(5).step(0.001);
-  gui.add(dataObj, "min").min(0).max(1000).step(10);
-  gui.add(dataObj, "max").min(1000).max(10000).step(10);
+  console.log(attract);
+  // adding to controls
+  gui
+    .add(dataObj, "G")
+    .min(0)
+    .max(5)
+    .step(0.001)
+    .name(att.name + "G");
+  gui
+    .add(dataObj, "min")
+    .min(0)
+    .max(1000)
+    .step(10)
+    .name(att.name + "Min");
+  gui
+    .add(dataObj, "max")
+    .min(800)
+    .max(10000)
+    .step(10)
+    .name(att.name + "Max");
+
   this.force = function () {
     Object.entries(remainingP).forEach((p) => {
       let vectorParticle = new Vector(
@@ -45,6 +65,6 @@ function Gravity(particles) {
   setInterval(() => {
     this.force();
   }, 1000 / 60);
-  // this.force();
+  this.force();
 }
 export default Gravity;

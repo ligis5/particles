@@ -7,6 +7,7 @@ function Attractor() {
   let rV = Math.random();
   let mass = Math.ceil(rV * 50);
   this.mass = mass < 5 ? 5 : mass;
+  this.name = "attractor";
   let particle = document.createElement("img");
   particle.setAttribute("alt", "dot");
   particle.setAttribute("id", "attractor");
