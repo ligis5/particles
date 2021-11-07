@@ -11,8 +11,6 @@ function Gravity(particles) {
     min: 200,
     max: 800,
   };
-  console.log(attract);
-  // adding to controls
   gui
     .add(dataObj, "G")
     .min(0)
