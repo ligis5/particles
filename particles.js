@@ -1,6 +1,4 @@
 const main = document.querySelector(".main");
-const centerW = main.clientWidth / 2;
-const centerH = main.clientHeight / 2;
 import Vector from "./vector.js";
 import gui from "./gui.js";
 
