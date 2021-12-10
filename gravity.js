@@ -1,45 +1,23 @@
 import Vector from "./vector.js";
-import gui from "./gui.js";
-
-function Gravity(particles) {
-  const { att, ...remainingP } = particles;
-  const attract = att;
-
+function Gravity(width, height) {
   // creating object for controls
+  this.width = width;
+  this.height = height;
   let dataObj = {
-    G: 0.1,
-    min: 200,
-    max: 800,
+    G: 1,
+    min: this.width / 10,
+    max: this.width / 2,
   };
-  gui
-    .add(dataObj, "G")
-    .min(0)
-    .max(5)
-    .step(0.001)
-    .name(att.name + "G");
-  gui
-    .add(dataObj, "min")
-    .min(0)
-    .max(1000)
-    .step(10)
-    .name(att.name + "Min");
-  gui
-    .add(dataObj, "max")
-    .min(800)
-    .max(10000)
-    .step(10)
-    .name(att.name + "Max");
-
-  this.force = function () {
-    Object.entries(remainingP).forEach((p) => {
+  
+  this.force = function (p1, p2) {
       let vectorParticle = new Vector(
-        p[1].currentPosition.x,
-        p[1].currentPosition.y
+        p1.currentPosition.x,
+        p1.currentPosition.y
       );
 
       let vectorAttractor = new Vector(
-        attract.currentPosition.x,
-        attract.currentPosition.y
+        p2.currentPosition.x,
+        p2.currentPosition.y
       );
 
       let v = new Vector(
@@ -51,18 +29,12 @@ function Gravity(particles) {
       let dSqMax = distanceSq > dataObj.max ? dataObj.max : distanceSq;
       let dSqMin = dSqMax < dataObj.min ? dataObj.min : distanceSq;
 
-      let F = dataObj.G * ((p[1].mass * attract.mass) / dSqMin);
+      let F = dataObj.G * ((p1.mass * p2.mass) / dSqMin);
 
       let normalized = new Vector(v.x / dSqMin, v.y / dSqMin);
 
-      p[1].acc.x -= normalized.x * F;
-      p[1].acc.y -= normalized.y * F;
-    });
+      p1.acc.x -= normalized.x * F;
+      p1.acc.y -= normalized.y * F;
   };
-
-  setInterval(() => {
-    this.force();
-  }, 1000 / 60);
-  this.force();
 }
 export default Gravity;

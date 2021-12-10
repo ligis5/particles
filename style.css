@@ -4,17 +4,6 @@
 }
 body {
   background-color: rgb(104, 92, 92);
-}
-.main {
-  width: 98vw;
-  height: 98vh;
-  margin: auto;
-}
-.particle {
-  position: fixed;
-  border-radius: 50%;
-  background-color: greenyellow;
-}
-.dg {
-  height: max-content;
+  width: 100vw;
+  height: 100vh;
 }

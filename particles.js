@@ -1,69 +1,38 @@
-const main = document.querySelector(".main");
 import Vector from "./vector.js";
-import gui from "./gui.js";
 
-function Particle(id) {
-  let dataObj = {
-    mass: Math.ceil(Math.random() * 50),
-  };
+function Particle(ctx, color, type, width, height) {
 
-  this.mass = dataObj.mass < 5 ? 5 : dataObj.mass;
-  this.name = id;
-  gui
-    .add(dataObj, "mass")
-    .min(1)
-    .max(50)
-    .step(0.1)
-    .name(this.name + id);
-  let particle = document.createElement("img");
-  particle.setAttribute("alt", "dot");
-  particle.setAttribute("id", id);
-  particle.setAttribute("class", "particle");
-  particle.setAttribute("width", `${this.mass}px`);
-  particle.setAttribute("height", `${this.mass}px`);
-  particle.style.background = id;
-  particle.src = "./particle.png";
-  main.appendChild(particle);
-  let x = Math.floor(Math.random() * main.clientWidth);
-  let y = Math.floor(Math.random() * main.clientHeight);
-  particle.style.left = `${x}px`;
-  particle.style.top = `${y}px`;
+   let mass = Math.ceil(Math.random() * 25);
+  this.mass = mass < 10 ? 10 : mass;
+  this.name = color;
+  this.type = type;
+  this.width = width;
+  this.height = height;
+  let x = Math.floor(type == 'attractor' ? this.width / 2 : Math.random() * this.width);
+  let y = Math.floor(type == 'attractor' ? this.height /2 : Math.random() * this.height);
+
+  let drawParticle = (x,y) => {
+    ctx.beginPath();
+  ctx.arc(x, y, this.mass, 0, 2 * Math.PI);
+  ctx.fillStyle = color;
+      ctx.fill();
+  }
 
   this.currentPosition = new Vector(x, y);
-
-  this.velocity = new Vector(2, 2);
+  drawParticle(this.currentPosition.x, this.currentPosition.y)
+  this.velocity = new Vector(type == 'attractor' ? 0 : 2, type == 'attractor' ? 0 : 2);
 
   this.acc = new Vector(0, 0);
-  // console.log(Gravity);
-  this.move = function () {
-    setInterval(() => {
-      // updating mass/size
-      this.mass = dataObj.mass;
-      particle.setAttribute("width", `${this.mass}px`);
-      particle.setAttribute("height", `${this.mass}px`);
 
+  this.move = function () {
       this.velocity.x += this.acc.x;
       this.velocity.y += this.acc.y;
       this.currentPosition.x += this.velocity.x;
       this.currentPosition.y += this.velocity.y;
-      particle.style.left = `${this.currentPosition.x}px`;
-      particle.style.top = `${this.currentPosition.y}px`;
+      drawParticle(this.currentPosition.x, this.currentPosition.y)
       this.acc.x = 0;
       this.acc.y = 0;
-      // if (
-      //   this.currentPosition.x <= 0 ||
-      //   this.currentPosition.x >= main.clientWidth
-      // ) {
-      //   this.velocity.x = this.velocity.x * -1;
-      // }
-      // if (
-      //   this.currentPosition.y <= 0 ||
-      //   this.currentPosition.y >= main.clientHeight
-      // ) {
-      //   this.velocity.y = this.velocity.y * -1;
-      // }
-    }, 1000 / 60);
+      
   };
-  this.move();
 }
 export default Particle;
